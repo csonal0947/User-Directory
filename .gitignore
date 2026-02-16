@@ -1,0 +1,29 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Cache
+/cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+error_log
+
+# Compiled
+*.phar

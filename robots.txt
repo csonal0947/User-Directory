@@ -1,0 +1,12 @@
+# robots.txt — User Directory Module
+# https://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /config/
+Disallow: /sql/
+Disallow: /cache/
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml

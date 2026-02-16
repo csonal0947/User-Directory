@@ -1,0 +1,423 @@
+/* =============================================================
+   User Directory Module — Custom Styles
+   ============================================================= */
+
+/* --- CSS Custom Properties --- */
+:root {
+    --header-bg: #0d6efd;
+    --search-bg: #f8f9fa;
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --card-hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    --delete-red: #dc3545;
+    --banner-green: #198754;
+    --banner-blue: #0d6efd;
+    --header-height: 60px;
+    --search-height: 64px;
+}
+
+/* --- Global Resets --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f0f2f5;
+    padding-top: calc(var(--header-height) + var(--search-height));
+    min-height: 100vh;
+}
+
+/* =============================================================
+   STICKY HEADER
+   ============================================================= */
+.header-row {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    background: linear-gradient(135deg, var(--header-bg) 0%, #0b5ed7 100%);
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.header-logo {
+    border-radius: 8px;
+    object-fit: contain;
+    background: white;
+    padding: 4px;
+}
+
+#totalBadge {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 20px;
+}
+
+#totalBadge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+/* Pulse animation for count updates */
+@keyframes countPulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.count-updated {
+    animation: countPulse 0.4s ease;
+}
+
+/* =============================================================
+   STICKY SEARCH ROW
+   ============================================================= */
+.search-row {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    z-index: 1020;
+    background: var(--search-bg);
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.search-row .input-group {
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.search-row .form-control {
+    border-radius: 0;
+    border: 1px solid #dee2e6;
+    font-size: 0.95rem;
+    padding: 10px 12px;
+}
+
+.search-row .form-control:focus {
+    box-shadow: none;
+    border-color: var(--header-bg);
+}
+
+.search-row .input-group-text {
+    border: 1px solid #dee2e6;
+    border-radius: 25px 0 0 25px;
+    padding: 10px 14px;
+}
+
+.search-row .btn {
+    border-radius: 0 25px 25px 0;
+}
+
+/* =============================================================
+   CACHE BANNER
+   ============================================================= */
+.cache-banner {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 1100;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cache-banner.show {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.cache-banner.cache-hit {
+    background: var(--banner-green);
+}
+
+.cache-banner.cache-miss {
+    background: var(--banner-blue);
+}
+
+/* =============================================================
+   USER CARDS
+   ============================================================= */
+.user-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+    overflow: hidden;
+    height: 100%;
+}
+
+.user-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.user-card .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+}
+
+.user-card .card-body {
+    padding: 16px;
+    background: white;
+}
+
+.user-card .card-body .email-text {
+    color: #555;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.user-card .card-body .email-icon {
+    color: var(--header-bg);
+    margin-right: 6px;
+}
+
+/* =============================================================
+   DELETE BUTTON
+   ============================================================= */
+.btn-delete {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+
+.btn-delete:hover {
+    background: var(--delete-red);
+    border-color: var(--delete-red);
+    color: white;
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+}
+
+.btn-delete:active {
+    transform: scale(0.95);
+}
+
+/* Card removal animation */
+@keyframes cardRemove {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { opacity: 0.5; transform: scale(0.95); }
+    100% { opacity: 0; transform: scale(0.8); height: 0; margin: 0; padding: 0; }
+}
+
+.card-removing {
+    animation: cardRemove 0.4s ease forwards;
+    pointer-events: none;
+}
+
+/* =============================================================
+   LOADING SPINNER
+   ============================================================= */
+#loadingSpinner {
+    transition: opacity 0.3s ease;
+}
+
+#loadingSpinner .spinner-border {
+    border-width: 4px;
+}
+
+/* =============================================================
+   NO RESULTS & END OF RESULTS
+   ============================================================= */
+#noResults i {
+    opacity: 0.5;
+}
+
+#endOfResults hr {
+    border-color: #dee2e6;
+}
+
+/* Card fade-in animation */
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-fade-in {
+    animation: cardFadeIn 0.35s ease forwards;
+}
+
+/* =============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================= */
+
+/* Extra small devices (portrait phones, < 576px) */
+@media (max-width: 575.98px) {
+    :root {
+        --header-height: 56px;
+        --search-height: 60px;
+    }
+
+    .header-logo {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    #totalBadge {
+        font-size: 0.8rem !important;
+        padding: 6px 12px !important;
+    }
+
+    .user-card .card-header {
+        font-size: 0.9rem;
+        padding: 12px 14px;
+    }
+
+    .user-card .card-body {
+        padding: 12px 14px;
+    }
+
+    .search-row .form-control {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+}
+
+/* Small devices (landscape phones, 576px — 767px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .user-card .card-header {
+        font-size: 0.95rem;
+    }
+}
+
+/* Medium devices (tablets, 768px — 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    #mainContent {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* Large devices (desktops, 992px+) */
+@media (min-width: 992px) {
+    #mainContent {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
+
+/* Extra large (1400px+) */
+@media (min-width: 1400px) {
+    #mainContent {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+}
+
+/* Print styles */
+@media print {
+    .header-row,
+    .search-row,
+    .cache-banner,
+    #loadingSpinner,
+    .btn-delete {
+        display: none !important;
+    }
+
+    body {
+        padding-top: 0;
+        background: white;
+    }
+
+    .user-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+    }
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode support (bonus) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --search-bg: #1a1a2e;
+        --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+        background-color: #0f0f23;
+        color: #e0e0e0;
+    }
+
+    .search-row {
+        background: #1a1a2e;
+        border-bottom-color: #333;
+    }
+
+    .search-row .form-control,
+    .search-row .input-group-text {
+        background: #16213e;
+        border-color: #333;
+        color: #e0e0e0;
+    }
+
+    .user-card .card-body {
+        background: #16213e;
+    }
+
+    .user-card .card-body .email-text {
+        color: #b0b0b0;
+    }
+
+    #noResults h4,
+    #noResults p,
+    #endOfResults p,
+    #loadingSpinner p {
+        color: #888 !important;
+    }
+
+    #totalBadge {
+        background: #16213e !important;
+        color: #7fb3ff !important;
+    }
+
+    footer {
+        border-top-color: #333 !important;
+        color: #666 !important;
+    }
+}
