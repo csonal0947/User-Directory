@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+
 require_once __DIR__ . '/config/database.php';
 
 // Get initial total count for header badge
@@ -66,18 +68,15 @@ try {
                     <img src="/assets/images/logo.svg" 
                          alt="User Directory Logo" 
                          class="header-logo"
-                         width="44" 
-                         height="44"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/44x44/0d6efd/ffffff?text=UD';">
-                    <h1 class="h5 mb-0 text-white fw-bold d-none d-sm-block">User Directory</h1>
+                         width="40" 
+                         height="40"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/40x40/4f46e5/ffffff?text=UD';">
+                    <h1 class="h5 mb-0 text-white fw-bold d-none d-sm-block" style="font-family:'Inter',sans-serif; letter-spacing:-0.02em;">User Directory</h1>
                 </div>
-
-                <!-- Total Users Badge -->
-                <div>
-                    <span class="badge bg-light text-primary fs-6 px-3 py-2 shadow-sm" id="totalBadge">
-                        Total Users: <strong id="totalCount"><?= number_format($totalUsers) ?></strong>
-                    </span>
-                </div>
+                <!-- Total Users Badge (right side of header) -->
+                <span class="badge fs-6 flex-shrink-0" id="totalBadge">
+                    Total Users: <strong id="totalCount"><?= number_format($totalUsers) ?></strong>
+                </span>
             </div>
         </div>
     </header>
@@ -85,8 +84,8 @@ try {
     <!-- ====================== STICKY SEARCH ROW ====================== -->
     <div class="search-row" id="searchRow">
         <div class="container-fluid">
-            <div class="row justify-content-center py-2">
-                <div class="col-12 col-md-8 col-lg-6">
+            <div class="d-flex align-items-center justify-content-center gap-3 py-2">
+                <div class="flex-grow-1" style="max-width: 600px;">
                     <div class="input-group shadow-sm">
                         <span class="input-group-text bg-white border-end-0">
                             <i class="fas fa-search text-muted"></i>

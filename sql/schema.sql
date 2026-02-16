@@ -21,7 +21,7 @@ CREATE TABLE users (
     lname      VARCHAR(100) NOT NULL,
     email      VARCHAR(255) NOT NULL UNIQUE,
     status     ENUM('active', 'deleted') NOT NULL DEFAULT 'active',
-    review     TEXT DEFAULT 'a sample review',
+    review     VARCHAR(500) DEFAULT 'a sample review',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Indexes for performance
