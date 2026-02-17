@@ -47,12 +47,12 @@ const DOM = {
 // =============================================================
 
 /**
- * Debounce function — delays execution until after `delay` ms of inactivity
+ * // The debounce function — delays execution by 300ms
  */
 function debounce(fn, delay = 300) {
     let timer;
     return function (...args) {
-        clearTimeout(timer);
+        clearTimeout(timer); // Clear previous timer
         timer = setTimeout(() => fn.apply(this, args), delay);
     };
 }

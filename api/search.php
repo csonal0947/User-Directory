@@ -19,7 +19,7 @@ header('X-Content-Type-Options: nosniff');
 
 require_once __DIR__ . '/../config/database.php';
 
-// --- Input validation & sanitization ---
+#Validates & sanitizes the q parameter
 $query = filter_input(INPUT_GET, 'q', FILTER_SANITIZE_SPECIAL_CHARS);
 
 if ($query === null || $query === '' || $query === false) {
@@ -38,6 +38,7 @@ $startTime = microtime(true);
 
 // --- Caching layer ---
 $cacheDir = __DIR__ . '/../cache';
+#Checks if a cached response exists
 if (!is_dir($cacheDir)) {
     mkdir($cacheDir, 0755, true);
 }
@@ -55,45 +56,55 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTTL) {
         exit;
     }
 }
-
+# Runs a LIKE query for case-insensitive search in fname and lname, returning top 6 results
 try {
     $db = Database::getConnection();
 
     $searchTerm = '%' . $query . '%';
 
-    // Search in fname and lname (case-insensitive via LOWER)
+    // Search in fname, lname, and combined full name (case-insensitive via LOWER)
     $stmt = $db->prepare("
         SELECT id, fname, lname, email, review, created_at
         FROM users
         WHERE status = 'active'
-          AND (LOWER(fname) LIKE LOWER(:term1) OR LOWER(lname) LIKE LOWER(:term2))
-        ORDER BY fname DESC, id DESC
+          AND (
+            LOWER(fname) LIKE LOWER(:term1) 
+            OR LOWER(lname) LIKE LOWER(:term2)
+            OR LOWER(CONCAT(fname, ' ', lname)) LIKE LOWER(:term3)
+          )
+        ORDER BY fname ASC, lname ASC, id ASC
         LIMIT 6
     ");
     $stmt->bindValue(':term1', $searchTerm, PDO::PARAM_STR);
     $stmt->bindValue(':term2', $searchTerm, PDO::PARAM_STR);
+    $stmt->bindValue(':term3', $searchTerm, PDO::PARAM_STR);
     $stmt->execute();
 
     $users = $stmt->fetchAll();
 
-    // Get count of ALL matching active users (not just top 6)
+    // Get count of ALL matching active users (not just top 6) so the UI can show "Showing 6 of 200 matches"
     $countStmt = $db->prepare("
         SELECT COUNT(*) as total
         FROM users
         WHERE status = 'active'
-          AND (LOWER(fname) LIKE LOWER(:term1) OR LOWER(lname) LIKE LOWER(:term2))
+          AND (
+            LOWER(fname) LIKE LOWER(:term1) 
+            OR LOWER(lname) LIKE LOWER(:term2)
+            OR LOWER(CONCAT(fname, ' ', lname)) LIKE LOWER(:term3)
+          )
     ");
     $countStmt->bindValue(':term1', $searchTerm, PDO::PARAM_STR);
     $countStmt->bindValue(':term2', $searchTerm, PDO::PARAM_STR);
+    $countStmt->bindValue(':term3', $searchTerm, PDO::PARAM_STR);
     $countStmt->execute();
     $matchTotal = (int)$countStmt->fetch()['total'];
 
-    // Also get the overall active total for the header badge
+    // Also get the overall active user count for the header badge
     $totalStmt = $db->query("SELECT COUNT(*) as total FROM users WHERE status = 'active'");
     $overallTotal = (int)$totalStmt->fetch()['total'];
 
     $loadTime = round((microtime(true) - $startTime) * 1000, 2);
-
+    #Packages the response, writes it to cache, and returns JSON
     $response = [
         'users'        => $users,
         'matchTotal'   => $matchTotal,

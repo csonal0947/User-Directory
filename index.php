@@ -62,32 +62,17 @@ try {
     <!-- ====================== STICKY HEADER ====================== -->
     <header class="header-row" id="mainHeader">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center py-2">
-                <!-- Logo -->
-                <div class="d-flex align-items-center gap-3">
-                    <img src="/assets/images/logo.svg" 
-                         alt="User Directory Logo" 
-                         class="header-logo"
-                         width="40" 
-                         height="40"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/40x40/4f46e5/ffffff?text=UD';">
-                    <h1 class="h5 mb-0 text-white fw-bold d-none d-sm-block" style="font-family:'Inter',sans-serif; letter-spacing:-0.02em;">User Directory</h1>
-                </div>
-                <!-- Total Users Badge (right side of header) -->
-                <span class="badge fs-6 flex-shrink-0" id="totalBadge">
-                    Total Users: <strong id="totalCount"><?= number_format($totalUsers) ?></strong>
-                </span>
-            </div>
+            <h1 style="display: flex; align-items: center; gap: 15px;"> <img src="/assets/images/logo.svg" alt="User Directory Logo" width="32" height="32" class="me-2 align-middle">User Directory</h1>
         </div>
     </header>
 
     <!-- ====================== STICKY SEARCH ROW ====================== -->
     <div class="search-row" id="searchRow">
         <div class="container-fluid">
-            <div class="d-flex align-items-center justify-content-center gap-3 py-2">
-                <div class="flex-grow-1" style="max-width: 600px;">
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text bg-white border-end-0">
+            <div class="d-flex align-items-center gap-15px py-2">
+                <div class="flex-grow-1 " style="max-width: 400px; margin-top: 10px;">
+                    <div class="input-group shadow-sm ">
+                        <span class="input-group-text bg-white border-end-1">
                             <i class="fas fa-search text-muted"></i>
                         </span>
                         <input type="search" 
@@ -97,6 +82,12 @@ try {
                                aria-label="Search users"
                                autocomplete="off"
                                maxlength="200">
+                        <button class="btn btn-primary" 
+                                id="searchButton" 
+                                type="button" 
+                                aria-label="Search users">
+                            <i class="fas fa-search"></i>
+                        </button>
                         <button class="btn btn-outline-secondary d-none" 
                                 id="clearSearch" 
                                 type="button" 
@@ -105,6 +96,10 @@ try {
                         </button>
                     </div>
                     <div id="searchInfo" class="text-muted small mt-1 text-center d-none"></div>
+                
+                <!-- Total Users Badge (right side of search box) -->
+                <div class="badge" role="status" aria-live="polite" id="totalBadge" aria-label="Total active users in directory">
+                    Total Users: <strong id="totalCount"><?= number_format($totalUsers) ?></strong>
                 </div>
             </div>
         </div>
@@ -161,13 +156,20 @@ try {
     <!-- App JS -->
     <script src="/assets/js/app.js"></script>
 
-    <!-- PWA Service Worker Registration -->
+    <!-- PWA Service Worker — Clear old cache then register -->
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('SW registered:', reg.scope))
-                    .catch(err => console.warn('SW registration failed:', err));
+            window.addEventListener('load', async () => {
+                // Unregister all old service workers and clear caches
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (const reg of registrations) {
+                    await reg.unregister();
+                }
+                const cacheNames = await caches.keys();
+                for (const name of cacheNames) {
+                    await caches.delete(name);
+                }
+                console.log('Old SW caches cleared, page will load fresh now.');
             });
         }
     </script>

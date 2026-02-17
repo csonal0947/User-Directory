@@ -58,12 +58,12 @@ try {
     $countStmt = $db->query("SELECT COUNT(*) as total FROM users WHERE status = 'active'");
     $total = (int)$countStmt->fetch()['total'];
 
-    // Fetch paginated users (descending by fname as required)
+    // Fetch paginated users (ascending alphabetical by fname as required)
     $stmt = $db->prepare("
         SELECT id, fname, lname, email, review, created_at 
         FROM users 
         WHERE status = 'active' 
-        ORDER BY fname DESC, id DESC
+        ORDER BY fname ASC, lname ASC, id ASC
         LIMIT :limit OFFSET :offset
     ");
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);

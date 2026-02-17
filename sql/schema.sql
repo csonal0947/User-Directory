@@ -49,26 +49,38 @@ BEGIN
     DECLARE v_review TEXT;
     DECLARE v_created_at TIMESTAMP;
 
-    -- First names pool (50 names)
+    -- First names pool (100 unique Indian names)
     DECLARE first_names JSON DEFAULT JSON_ARRAY(
-        'James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda',
-        'David', 'Elizabeth', 'William', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
-        'Thomas', 'Sarah', 'Christopher', 'Karen', 'Charles', 'Lisa', 'Daniel', 'Nancy',
-        'Matthew', 'Betty', 'Anthony', 'Margaret', 'Mark', 'Sandra', 'Donald', 'Ashley',
-        'Steven', 'Kimberly', 'Paul', 'Emily', 'Andrew', 'Donna', 'Joshua', 'Michelle',
-        'Kenneth', 'Carol', 'Kevin', 'Amanda', 'Brian', 'Dorothy', 'George', 'Melissa',
-        'Timothy', 'Deborah'
+        'Aarav', 'Vivaan', 'Aditya', 'Vihaan', 'Arjun', 'Reyansh', 'Sai', 'Arnav',
+        'Dhruv', 'Kabir', 'Ritvik', 'Aarush', 'Kian', 'Darsh', 'Lakshya', 'Ishaan',
+        'Rohan', 'Shaurya', 'Atharv', 'Advait', 'Ayaan', 'Pranav', 'Kunal', 'Ankit',
+        'Nikhil', 'Rahul', 'Vikram', 'Siddharth', 'Yash', 'Harsh', 'Manish', 'Gaurav',
+        'Rajesh', 'Suresh', 'Mahesh', 'Amit', 'Deepak', 'Ravi', 'Arun', 'Karthik',
+        'Varun', 'Tarun', 'Naveen', 'Pavan', 'Sachin', 'Rohit', 'Vikas', 'Akash',
+        'Pradeep', 'Sunil', 'Ananya', 'Diya', 'Saanvi', 'Isha', 'Kiara', 'Myra',
+        'Aanya', 'Priya', 'Neha', 'Pooja', 'Sneha', 'Divya', 'Kavya', 'Nisha',
+        'Riya', 'Simran', 'Meera', 'Tanvi', 'Shruti', 'Anjali', 'Swati', 'Preeti',
+        'Komal', 'Sonali', 'Rashmi', 'Pallavi', 'Nikita', 'Megha', 'Bhavna', 'Jyoti',
+        'Rekha', 'Sunita', 'Geeta', 'Lata', 'Usha', 'Suman', 'Rani', 'Radha',
+        'Lakshmi', 'Savita', 'Padma', 'Chandra', 'Hemant', 'Manoj', 'Dinesh', 'Ramesh',
+        'Ganesh', 'Mukesh', 'Rakesh', 'Hitesh'
     );
 
-    -- Last names pool (50 names)
+    -- Last names pool (100 unique Indian surnames)
     DECLARE last_names JSON DEFAULT JSON_ARRAY(
-        'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
-        'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson',
-        'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson',
-        'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker',
-        'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
-        'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell',
-        'Carter', 'Roberts'
+        'Sharma', 'Verma', 'Gupta', 'Singh', 'Kumar', 'Patel', 'Mehta', 'Shah',
+        'Joshi', 'Mishra', 'Pandey', 'Tiwari', 'Dubey', 'Shukla', 'Srivastava', 'Chauhan',
+        'Yadav', 'Rajput', 'Thakur', 'Bhatia', 'Malhotra', 'Kapoor', 'Chopra', 'Arora',
+        'Khanna', 'Sethi', 'Tandon', 'Mehra', 'Goyal', 'Agarwal', 'Bansal', 'Garg',
+        'Mittal', 'Jain', 'Saxena', 'Trivedi', 'Dwivedi', 'Kulkarni', 'Deshmukh', 'Patil',
+        'Pawar', 'Jadhav', 'More', 'Shinde', 'Chavan', 'Kadam', 'Nair', 'Menon',
+        'Pillai', 'Iyer', 'Rao', 'Reddy', 'Naidu', 'Raju', 'Prasad', 'Murthy',
+        'Hegde', 'Shetty', 'Bhat', 'Gowda', 'Das', 'Bose', 'Sen', 'Ghosh',
+        'Mukherjee', 'Banerjee', 'Chatterjee', 'Chakraborty', 'Roy', 'Dutta', 'Sarkar', 'Mitra',
+        'Bhatt', 'Trivedi', 'Raval', 'Desai', 'Parikh', 'Vyas', 'Dave', 'Prajapati',
+        'Rathod', 'Solanki', 'Makwana', 'Parmar', 'Thakor', 'Bhavsar', 'Barot', 'Panchal',
+        'Chaudhary', 'Khatri', 'Ahuja', 'Bajaj', 'Dhawan', 'Oberoi', 'Walia', 'Bedi',
+        'Gill', 'Sandhu', 'Grewal', 'Sidhu'
     );
 
     -- Reviews pool
@@ -95,8 +107,8 @@ BEGIN
 
     WHILE i <= 10000 DO
         -- Pick random names
-        SET v_fname = JSON_UNQUOTE(JSON_EXTRACT(first_names, CONCAT('$[', FLOOR(RAND() * 50), ']')));
-        SET v_lname = JSON_UNQUOTE(JSON_EXTRACT(last_names, CONCAT('$[', FLOOR(RAND() * 50), ']')));
+        SET v_fname = JSON_UNQUOTE(JSON_EXTRACT(first_names, CONCAT('$[', FLOOR(RAND() * 100), ']')));
+        SET v_lname = JSON_UNQUOTE(JSON_EXTRACT(last_names, CONCAT('$[', FLOOR(RAND() * 100), ']')));
 
         -- Generate unique email
         SET v_email = CONCAT(LOWER(v_fname), '.', LOWER(v_lname), '.', i, '@example.com');
